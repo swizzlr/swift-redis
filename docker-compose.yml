@@ -1,0 +1,9 @@
+dev:
+  build: .
+  volumes:
+    - .:/code
+  links:
+    - redis
+
+redis:
+  image: redis
