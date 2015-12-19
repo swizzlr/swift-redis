@@ -9,7 +9,11 @@ This package wraps the hiredis library; eventually I hope to remove this depende
 # Getting Started
 
 ## Installation
-Add this repo to your Package.swift, major version 0. You must have hiredis installed with development headers. I'm assuming production will only usefully occur on Linux; see below about OS X caveats.
+Add this repo to your Package.swift in your dependencies array like so:
+
+`.Package(url: “https://github.com/swizzlr/swift-redis.git”, majorVersion: 0)`
+
+You must have hiredis installed with development headers. I'm assuming production will only usefully occur on Linux; see below about OS X caveats.
 
 ## Usage
 
