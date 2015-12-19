@@ -1,5 +1,6 @@
 dev:
   build: .
+  privileged: true
   links:
     - redis
 
