@@ -1,3 +1,3 @@
 import XCTest
 
-XCTMain([PingTests()])
+XCTMain([PingTests(), MalformedCommandTests()])
