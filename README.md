@@ -17,6 +17,8 @@ You must have hiredis installed with development headers. I'm assuming productio
 
 ## Usage
 
+THIS IS OUT OF DATE. Use `hiredis` for now which will provide a more stable API.
+
 Simply `import Redis` and you're ready to go!
 
 A simple example, straight from the integration test suite.
