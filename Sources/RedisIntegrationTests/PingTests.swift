@@ -6,7 +6,7 @@ final class PingTests: XCTestCase {
   }
 
   func testThatWeCanPing() {
-    let reply = redisCommand(context: context, command: "PING")?.replyString
+    let reply = redisCommand(context: context, command: "PING")?.str
     XCTAssertEqual("PONG", reply)
   }
   var allTests: [(String, () -> Void)] {

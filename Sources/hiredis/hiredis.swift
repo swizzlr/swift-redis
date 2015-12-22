@@ -29,7 +29,6 @@ public extension redisContext {
     return cContext.memory.fd
   }
 
-  /// Returned for completion's sake, but the values are defined in a CPP define.
   public var flags: Int32 {
     return cContext.memory.flags
   }
@@ -86,23 +85,31 @@ public final class redisReply {
 }
 
 public extension redisReply {
-  var replyString: String {
+  /* Used for both REDIS_REPLY_ERROR and REDIS_REPLY_STRING */
+  var str: String {
     return String.fromCString(cReply.memory.str)!
   }
-}
-//  var type: Int32
-//  var integer: Swift.Int64
+  /* REDIS_REPLY_* */
+  var type: Int32 {
+    return cReply.memory.type
+  }
+  /* The integer when type is REDIS_REPLY_INTEGER */
+  var integer: Int64 {
+    return cReply.memory.integer
+  }
+
+  /* elements vector for REDIS_REPLY_ARRAY */
+  var element: [redisReply]? {
+    guard cReply.memory.element != nil else { return nil }
+    return UnsafeBufferPointer(start: cReply.memory.element, count: Int(cReply.memory.elements)).map { creplyptr in
+      return redisReply(cReply: creplyptr)!
+    }
+  }
 //  var len: Swift.Int32
 //  var str: Swift.UnsafeMutablePointer<Swift.Int8>
-//  var elements: Swift.Int
-//  var element: Swift.UnsafeMutablePointer<Swift.UnsafeMutablePointer<CHiRedis.redisReply>>
-////      int type; /* REDIS_REPLY_* */
-////    long long integer; /* The integer when type is REDIS_REPLY_INTEGER */
 ////    int len; /* Length of string */
-////    char *str; /* Used for both REDIS_REPLY_ERROR and REDIS_REPLY_STRING */
-////    size_t elements; /* number of elements, for REDIS_REPLY_ARRAY */
-////    struct redisReply **element; /* elements vector for REDIS_REPLY_ARRAY */
-//}
+////    char *str;
+}
 
 final class redisReader {
   private let cReader: UnsafeMutablePointer<CHiRedis.redisReader>
