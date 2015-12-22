@@ -1,1 +1,7 @@
-let Redis = "Not implemented."
+public final class Connection {
+
+}
+
+public final class Response {
+
+}

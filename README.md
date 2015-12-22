@@ -1,42 +1,50 @@
+[![Latest release](https://img.shields.io/github/release/swizzlr/swift-redis.svg)](https://github.com/swizzlr/swift-redis/releases)
 [![Build Status](https://travis-ci.org/swizzlr/swift-redis.svg?branch=master)](https://travis-ci.org/swizzlr/swift-redis) [![License](https://img.shields.io/badge/license-BSD-blue.svg)](https://github.com/swizzlr/swift-redis/blob/master/LICENSE)
-# SwiftRedis
-Redis bridges for Swift, Linux friendly! This package is still in very early development and needs some love before it's ready for wide use.
+
+# Swift Redis
+Redis for Swift, Linux friendly!
 
 # Introduction
 Much serious backend development, for better or for worse, tends to depend on Redis for distributed synchronization of data. Swift isn't a serious force for developers trying to do meaningful work on the server without bindings for systems such as Redis.
 
-This package wraps the hiredis library; eventually I hope to remove this dependency entirely, since Swift is quite suited to that sort of systems programming too. However, hiredis is a proven, solid backbone of many other implementations of Redis, and I have no qualms about standing on it for now while we get started.
+This package wraps the hiredis library, a solid and proven backbone to most Redis client libraries.
 
 # Getting Started
 
 ## Installation
 Add this repo to your Package.swift in your dependencies array like so:
 
-`.Package(url: “https://github.com/swizzlr/swift-redis.git”, majorVersion: 0)`
+`.Package(url: “https://github.com/swizzlr/swift-redis.git”, majorVersion: 1)`
 
-You must have hiredis installed with development headers. I'm assuming production will only usefully occur on Linux; see below about OS X caveats.
+You must have `hiredis` installed with development headers. On ubuntu/debian:
+
+`sudo apt-get install libhiredis-dev`
+
+On Mac OS X:
+
+`brew install hiredis`
+
+If developing on OS X, please see below for notes about module maps.
 
 ## Usage
 
-THIS IS OUT OF DATE. Use `hiredis` for now which will provide a more stable API.
+> Note: I'm currently working on the higher level Redis abstraction with a Swift. However, a wrapper library for hiredis is available in 1.0 that gives you total power and flexibility. If you write any code to wrap hiredis, drop it in an issue!
 
-Simply `import Redis` and you're ready to go!
+Simply `import hiredis` and you're ready to go!
 
 A simple example, straight from the integration test suite.
 
 ```swift
 // Connect to a server, getting a context object which represents the connection and its state
-let context: Context = connect(ip: "127.0.0.1", port: 6379)
-let reply = command(context: context, command: "PING", args: 0).replyString // "PONG"
+let context = redisConnect(ip: "127.0.0.1", port: 6379)
+let reply = redisCommand(context: context, command: "PING", args: 0).str // "PONG"
 ```
 
 ## Structure
 
 - `CHiRedis` is automatically installed, a separate module which maps a Linux installation of hiredis into Swift
-- `hiredis` (lowercase, to imply not for public consumption) is a set of simple wrappers around CHiRedis that perform the documented type conversions and vararg wrapping from C.
-- `Redis` is the high level abstraction that your day to day Redis use will be in, I hope.
-
-This is subject to change until 1.0.
+- `hiredis` is a set of simple wrappers around CHiRedis that perform the documented type conversions and vararg wrappings from C. It's the extra conversions the Swift compiler can't manage
+- `Redis` is the high level abstraction that your day to day Redis use will be in. Under development.
 
 # License
 SwiftRedis is available under the [BSD 3-clause license](./LICENSE). If you have any suggestions for relicensing, I'm happy to hear it, as long as it isn't viral.
@@ -81,3 +89,7 @@ If you're on a Mac, you'll need to install the [docker-toolbox](https://www.dock
 If you're feeling a little more advanced, you can use [docker-machine to provision a VM in the cloud](https://docs.docker.com/machine/). You'll have the added benefit of much faster installs.
 
 To get started, run `./script/test` to build the complete package and run the tests in Docker.
+
+## Future work
+
+Eventually I hope to remove the dependency on hiredis entirely, since Swift is quite suited to that sort of systems programming too. However, hiredis is a proven, solid backbone of many other implementations of Redis, and I have no qualms about standing on it for now while we get started.
