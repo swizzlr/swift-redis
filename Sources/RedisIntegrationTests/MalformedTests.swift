@@ -13,5 +13,18 @@ final class MalformedCommandTests: XCTestCase {
   }
 }
 
+final class MalformedContextTests: XCTestCase {
+  func testThatUnreachableContextsAreNotCreatable() {
+    let ctx = redisConnect(ip: "THIS IS NOT AN IP", port: 65000)
+    XCTAssertNotNil(ctx.errstr)
+
+  }
+  var allTests: [(String, () -> Void)] {
+    return [
+      ("testThatUnreachableContextsAreNotCreatable", testThatUnreachableContextsAreNotCreatable)
+    ]
+  }
+}
+
 import XCTest
 import hiredis

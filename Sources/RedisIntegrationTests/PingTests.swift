@@ -2,7 +2,8 @@ final class PingTests: XCTestCase {
   let context: redisContext = newContext()
 
   func testThatWeCanConnect() {
-    XCTAssertNotNil(context)
+    print(context.errstr)
+    XCTAssertNil(context.errstr)
   }
 
   func testThatWeCanPing() {

@@ -1,6 +1,13 @@
 // MARK: hiredis wrapper types
 public final class redisContext {
   private let cContext: UnsafeMutablePointer<CHiRedis.redisContext>
+  public var errstr: String? {
+    return withUnsafePointer(&cContext.memory.errstr) { b in
+      return String.fromCString(UnsafePointer(b)).flatMap { s in
+        if s == "" { return nil } else { return s }
+      }
+    }
+  }
   private init(cContext: UnsafeMutablePointer<CHiRedis.redisContext>) {
     self.cContext = cContext
   }
