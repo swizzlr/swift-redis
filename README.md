@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/swizzlr/swift-redis.svg?branch=master)](https://travis-ci.org/swizzlr/swift-redis) [![License](https://img.shields.io/badge/license-BSD-blue.svg)](https://github.com/swizzlr/swift-redis/blob/master/LICENSE)
 # SwiftRedis
 Redis bridges for Swift, Linux friendly! This package is still in very early development and needs some love before it's ready for wide use.
 
