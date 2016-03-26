@@ -179,6 +179,11 @@ public func redisCommand(context context: redisContext, command: String, args: C
   }
 }
 
+
+public func redisCommandWithArguments(context context: redisContext, command: String, args: CVaListPointer) -> redisReply? {
+  return redisReply(cReply: UnsafeMutablePointer<CHiRedis.redisReply>(redisvCommand(context.cContext, command, args)))
+}
+
 public func redisConnect(ip ip: String, port: Int) -> redisContext {
   return redisContext(cContext: redisConnect(ip, Int32(port)))
 }
