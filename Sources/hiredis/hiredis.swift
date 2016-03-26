@@ -13,46 +13,48 @@ public final class redisContext {
 public extension redisContext {
   /// Error flags, 0 when there is no error
   public var err: Int32 {
-    return cContext.memory.err
+    return cContext.pointee.err
   }
 
   /// String representation of error when applicable
   public var errstr: String? {
-    return withUnsafePointer(&cContext.memory.errstr) { b in
-      return String.fromCString(UnsafePointer(b)).flatMap { s in
-        if s == "" { return nil } else { return s }
-      }
+    return withUnsafePointer(&cContext.pointee.errstr) { b in
+	let str = String(cString:UnsafePointer(b))
+	if str == "" {
+		return nil
+	}      
+	return str 
     }
   }
 
   public var fd: Int32 {
-    return cContext.memory.fd
+    return cContext.pointee.fd
   }
 
   public var flags: Int32 {
-    return cContext.memory.flags
+    return cContext.pointee.flags
   }
 
   /// Write buffer
   public var obuf: UnsafeMutablePointer<CChar> {
-    return cContext.memory.obuf
+    return cContext.pointee.obuf
   }
 
   /// Protocol reader
   public var reader: UnsafeMutablePointer<CHiRedis.redisReader> {
-    return cContext.memory.reader
+    return cContext.pointee.reader
   }
 
 //  public var connection_type: CHiRedis.redisConnectionType {
-//    return cContext.memory.connection_type
+//    return cContext.pointee.connection_type
 //  }
 
 //  public var timeout: UnsafeMutablePointer<CHiRedis.timeval> {
-//    return cContext.memory.timeout
+//    return cContext.pointee.timeout
 //  }
 //
 //  public var tcp: tcp {
-//    return cContext.memory.tcp
+//    return cContext.pointee.tcp
 //  }
 
 //  struct {
@@ -62,7 +64,7 @@ public extension redisContext {
 //    } tcp;
 
 //  public var unix_sock: unix_sock {
-//    return cContext.memory.unix_sock
+//    return cContext.pointee.unix_sock
 //  }
 
 //    struct {
@@ -87,21 +89,21 @@ public final class redisReply {
 public extension redisReply {
   /* Used for both REDIS_REPLY_ERROR and REDIS_REPLY_STRING */
   var str: String {
-    return String.fromCString(cReply.memory.str)!
+    return String(cString:cReply.pointee.str)
   }
   /* REDIS_REPLY_* */
   var type: Int32 {
-    return cReply.memory.type
+    return cReply.pointee.type
   }
   /* The integer when type is REDIS_REPLY_INTEGER */
   var integer: Int64 {
-    return cReply.memory.integer
+    return cReply.pointee.integer
   }
 
   /* elements vector for REDIS_REPLY_ARRAY */
   var element: [redisReply]? {
-    guard cReply.memory.element != nil else { return nil }
-    return UnsafeBufferPointer(start: cReply.memory.element, count: Int(cReply.memory.elements)).map { creplyptr in
+    guard cReply.pointee.element != nil else { return nil }
+    return UnsafeBufferPointer(start: cReply.pointee.element, count: Int(cReply.pointee.elements)).map { creplyptr in
       return redisReply(cReply: creplyptr)!
     }
   }
@@ -171,7 +173,7 @@ final class redisReader {
 
 // MARK: hiredis wrapper functions
 
-public func redisCommand(context context: redisContext, command: String, args: CVarArgType ...) -> redisReply? {
+public func redisCommand(context context: redisContext, command: String, args: CVarArg ...) -> redisReply? {
   return withVaList(args) { args in
     redisReply(cReply: UnsafeMutablePointer<CHiRedis.redisReply>(redisvCommand(context.cContext, command, args)))
   }
