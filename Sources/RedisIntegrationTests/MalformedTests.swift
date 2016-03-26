@@ -6,7 +6,7 @@ final class MalformedCommandTests: XCTestCase {
     }
 
   }
-  var allTests: [(String, () -> Void)] {
+  static var allTests: [(String, MalformedCommandTests -> () throws -> Void)] {
     return [
       ("testThatMalformedCommandsReturnNil", testThatMalformedCommandsReturnNil)
     ]
@@ -19,7 +19,7 @@ final class MalformedContextTests: XCTestCase {
     XCTAssertNotNil(ctx.errstr)
 
   }
-  var allTests: [(String, () -> Void)] {
+  static var allTests: [(String, MalformedContextTests -> () throws -> Void)] {
     return [
       ("testThatUnreachableContextsAreNotCreatable", testThatUnreachableContextsAreNotCreatable)
     ]

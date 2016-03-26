@@ -1,3 +1,3 @@
 import XCTest
 
-XCTMain([PingTests(), MalformedCommandTests(), MalformedContextTests()])
+XCTMain([testCase(PingTests.allTests), testCase(MalformedCommandTests.allTests), testCase(MalformedContextTests.allTests)])

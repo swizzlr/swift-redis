@@ -9,7 +9,7 @@ final class PingTests: XCTestCase {
     let reply = redisCommand(context: context, command: "PING")?.str
     XCTAssertEqual("PONG", reply)
   }
-  var allTests: [(String, () -> Void)] {
+  static var allTests: [(String, PingTests -> () throws -> Void)] {
     return [
       ("testThatWeCanPing", testThatWeCanPing),
       ("testThatWeCanConnect", testThatWeCanConnect)
