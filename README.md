@@ -36,8 +36,8 @@ A simple example, straight from the integration test suite.
 
 ```swift
 // Connect to a server, getting a context object which represents the connection and its state
-let context = redisConnect(ip: "127.0.0.1", port: 6379)
-let reply = redisCommand(context: context, command: "PING", args: 0).str // "PONG"
+let context = Redis(host: "127.0.0.1", port: 6379)
+let reply = context.issue(command: .PING, withArguments: .PING) // "PONG"
 ```
 
 ## Structure

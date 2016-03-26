@@ -19,11 +19,11 @@ public extension redisContext {
   /// String representation of error when applicable
   public var errstr: String? {
     return withUnsafePointer(&cContext.pointee.errstr) { b in
-	let str = String(cString:UnsafePointer(b))
-	if str == "" {
-		return nil
-	}      
-	return str 
+	    let str = String(cString:UnsafePointer(b))
+    	if str == "" {
+    		return nil
+    	}
+    	return str
     }
   }
 
