@@ -17,4 +17,8 @@ public class PubSub {
 		redisUnsubscribeSync(context: redis.context, fromChannel: channel)
 	}
 
+	public func publishSync(message message: String, toChannel channel : String) {
+		redisPublishSync(context: redis.context, message: message, toChannel: channel)
+	}
+
 }

@@ -205,6 +205,16 @@ public func redisSubscribeSync(context context: redisContext, toChannel channel:
 }
 
 
+public func redisPublishSync(context context: redisContext, message: String, toChannel channel: String, args: CVarArg ...) {
+  withVaList(args) { args in
+
+    let subscribeReply = UnsafeMutablePointer<CHiRedis.redisReply>(redisvCommand(context.cContext, "PUBLISH \(channel) \(message)", args))
+    freeReplyObject(subscribeReply)
+
+  }
+}
+
+
 public func redisUnsubscribeSync(context context: redisContext, fromChannel channel: String, args: CVarArg ...) {
   withVaList(args) { args in
 

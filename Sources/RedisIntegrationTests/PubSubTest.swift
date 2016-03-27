@@ -12,18 +12,22 @@ final class PubSubTest: XCTestCase {
       print("Message Recieved")
       print(message)
       pubsub.unsubscribeSync("testThatWeCanSubscribe")
-      XCTAssertEqual(true, true)
+      XCTAssertEqual("asdf", message)
     }
-    // if let reply = context.subscribe(command: .PING, withArguments: .PING) {
-    //   XCTAssertEqual("PONG", reply)
-    // }
-    // else {
-    //   XCTAssertEqual("PONG", "fail")
-    // }
+  }
+
+
+
+  func testThatWeCanSendMessages() {
+    let pubsub = PubSub(redis: context)
+
+    pubsub.publishSync(message:"Test", toChannel: "testThatWeCanSendMessages")
+    
   }
   static var allTests: [(String, PubSubTest -> () throws -> Void)] {
     return [
       ("testThatWeCanSubscribe", testThatWeCanSubscribe),
+        ("testThatWeCanSendMessages", testThatWeCanSendMessages)
     ]
   }
 }
