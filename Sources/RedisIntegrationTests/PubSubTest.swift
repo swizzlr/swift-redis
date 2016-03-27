@@ -8,10 +8,10 @@ final class PubSubTest: XCTestCase {
   func testThatWeCanSubscribe() {
     let pubsub = PubSub(redis: context)
 
-    pubsub.subscribe(toChannel: "testThatWeCanSubscribe") { message in
+    pubsub.subscribeSync(toChannel: "testThatWeCanSubscribe") { message in
       print("Message Recieved")
       print(message)
-      pubsub.unsubscribe("testThatWeCanSubscribe")
+      pubsub.unsubscribeSync("testThatWeCanSubscribe")
       XCTAssertEqual(true, true)
     }
     // if let reply = context.subscribe(command: .PING, withArguments: .PING) {

@@ -9,7 +9,7 @@ public class PubSub {
 		self.redis = redis
 	}
 
-	public func subscribeSync(toChannel channel : String, handleWith callback : (message: redisReply?) -> ()) {
+	public func subscribeSync(toChannel channel : String, handleWith callback : (message: String) -> ()) {
 		redisSubscribeSync(context: redis.context, toChannel: channel, handleWith: callback)
 	}
 

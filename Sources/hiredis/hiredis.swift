@@ -114,7 +114,7 @@ public extension redisReply {
 }
 
 final class redisReader {
-  private let cReader: UnsafeMutablePointer<CHiRedis.redisReader>
+  var cReader: UnsafeMutablePointer<CHiRedis.redisReader>
   private init(cReader: UnsafeMutablePointer<CHiRedis.redisReader>) {
     self.cReader = cReader
   }
@@ -181,7 +181,7 @@ public func redisCommand(context context: redisContext, command: String, args: C
 
 var subscriptions : Array<String> = []
 
-public func redisSubscribeSync(context context: redisContext, toChannel channel: String, handleWith handler: (message: redisReply?) -> (), args: CVarArg ...) {
+public func redisSubscribeSync(context context: redisContext, toChannel channel: String, handleWith handler: (message: String) -> (), args: CVarArg ...) {
   withVaList(args) { args in
 
     let subscribeReply = UnsafeMutablePointer<CHiRedis.redisReply>(redisvCommand(context.cContext, "SUBSCRIBE \(channel)", args))
@@ -192,9 +192,12 @@ public func redisSubscribeSync(context context: redisContext, toChannel channel:
     var reply : UnsafeMutablePointer<Void> = nil
 
     while subscriptions.contains(channel) && redisGetReply(context.cContext, &reply) == 0 /*REDIS_OK*/ {
-        //handler(message: reply)
-        print(reply)
-        handler(message: nil)
+        let response = NSString(string: String(cString:context.reader.pointee.buf))
+
+        let resultParts = response.componentsSeparatedByString("\r\n")
+        let message = resultParts[resultParts.count - 2]
+        handler(message: message)
+
         freeReplyObject(reply)
     }
 
@@ -223,3 +226,4 @@ public func redisConnect(ip ip: String, port: Int) -> redisContext {
 }
 
 import CHiRedis
+import Foundation
