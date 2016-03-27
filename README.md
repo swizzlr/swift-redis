@@ -30,7 +30,7 @@ If developing on OS X, please see below for notes about module maps.
 
 > Note: I'm currently working on the higher level Redis abstraction with a Swift. However, a wrapper library for hiredis is available in 1.0 that gives you total power and flexibility. If you write any code to wrap hiredis, drop it in an issue!
 
-Simply `import hiredis` and you're ready to go!
+Simply `import Redis` and you're ready to go!
 
 A simple example, straight from the integration test suite.
 
