@@ -1,21 +1,26 @@
+import Redis
+import XCTest
+
 final class PingTests: XCTestCase {
-  let context: redisContext = newContext()
+
+  let context: Redis = Redis(context: newContext())
 
   func testThatWeCanConnect() {
-    XCTAssertNil(context.errstr)
+    XCTAssertNil(context.error)
   }
 
   func testThatWeCanPing() {
-    let reply = redisCommand(context: context, command: "PING")?.str
-    XCTAssertEqual("PONG", reply)
+    if let reply = context.issue(command: .PING, withArguments: .PING) {
+      XCTAssertEqual("PONG", reply)
+    }
+    else {
+      XCTAssertEqual("PONG", "fail")
+    }
   }
-  var allTests: [(String, () -> Void)] {
+  static var allTests: [(String, PingTests -> () throws -> Void)] {
     return [
       ("testThatWeCanPing", testThatWeCanPing),
       ("testThatWeCanConnect", testThatWeCanConnect)
     ]
   }
 }
-
-import hiredis
-import XCTest

@@ -5,8 +5,12 @@ let package = Package(
     targets: [
       Target(
         name: "RedisIntegrationTests",
-        dependencies: [.Target(name: "hiredis")]),
-      Target(name: "Redis"),
+        dependencies: [.Target(name: "hiredis"), .Target(name: "Redis")]
+      ),
+      Target(
+        name: "Redis",
+        dependencies: [.Target(name: "hiredis")]
+      ),
       Target(name: "hiredis")
     ],
     dependencies: [

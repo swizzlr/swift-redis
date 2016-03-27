@@ -1,12 +1,13 @@
 final class MalformedCommandTests: XCTestCase {
   func testThatMalformedCommandsReturnNil() {
     "HELLO WORLD".withCString { b in
+      // print(b)
       let reply = redisCommand(context: newContext(), command: "SET key %ll", args: b)
       XCTAssertNil(reply)
     }
 
   }
-  var allTests: [(String, () -> Void)] {
+  static var allTests: [(String, MalformedCommandTests -> () throws -> Void)] {
     return [
       ("testThatMalformedCommandsReturnNil", testThatMalformedCommandsReturnNil)
     ]
@@ -19,7 +20,7 @@ final class MalformedContextTests: XCTestCase {
     XCTAssertNotNil(ctx.errstr)
 
   }
-  var allTests: [(String, () -> Void)] {
+  static var allTests: [(String, MalformedContextTests -> () throws -> Void)] {
     return [
       ("testThatUnreachableContextsAreNotCreatable", testThatUnreachableContextsAreNotCreatable)
     ]
