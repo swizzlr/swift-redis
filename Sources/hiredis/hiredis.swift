@@ -179,15 +179,19 @@ public func redisCommand(context context: redisContext, command: String, args: C
   }
 }
 
-public func redisSubscribe(context context: redisContext, toChannel channel: String, handleWith handler: (message: redisReply?) -> (), args: CVarArg ...) {
+var subscriptions : Array<String> = []
+
+public func redisSubscribeSync(context context: redisContext, toChannel channel: String, handleWith handler: (message: redisReply?) -> (), args: CVarArg ...) {
   withVaList(args) { args in
 
     let subscribeReply = UnsafeMutablePointer<CHiRedis.redisReply>(redisvCommand(context.cContext, "SUBSCRIBE \(channel)", args))
     freeReplyObject(subscribeReply)
 
+    subscriptions.append(channel)
+
     var reply : UnsafeMutablePointer<Void> = nil
 
-    while redisGetReply(context.cContext, &reply) == 0 /*REDIS_OK*/ {
+    while subscriptions.contains(channel) && redisGetReply(context.cContext, &reply) == 0 /*REDIS_OK*/ {
         //handler(message: reply)
         print(reply)
         handler(message: nil)
@@ -198,11 +202,13 @@ public func redisSubscribe(context context: redisContext, toChannel channel: Str
 }
 
 
-public func redisUnsubscribe(context context: redisContext, fromChannel channel: String, args: CVarArg ...) {
+public func redisUnsubscribeSync(context context: redisContext, fromChannel channel: String, args: CVarArg ...) {
   withVaList(args) { args in
 
     let subscribeReply = UnsafeMutablePointer<CHiRedis.redisReply>(redisvCommand(context.cContext, "UNSUBSCRIBE \(channel)", args))
     freeReplyObject(subscribeReply)
+
+    subscriptions = subscriptions.filter {$0 != channel}
 
   }
 }
