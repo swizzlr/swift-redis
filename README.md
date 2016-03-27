@@ -35,10 +35,29 @@ Simply `import hiredis` and you're ready to go!
 A simple example, straight from the integration test suite.
 
 ```swift
+
 // Connect to a server, getting a context object which represents the connection and its state
 let context = Redis(host: "127.0.0.1", port: 6379)
 let reply = context.issue(command: .PING, withArguments: .PING) // "PONG"
+
 ```
+
+#### PubSub
+
+Currently only synchronys calls are available.
+
+```swift
+// Connect to a server, getting a context object which represents the connection and its state
+let context = Redis(host: "127.0.0.1", port: 6379)
+let pubsub = PubSub(redis:context)
+
+pubsub.subscribeSync(toChannel: "testThatWeCanSubscribe") { message in
+  print(message)
+  pubsub.unsubscribeSync("testThatWeCanSubscribe")
+  pubsub.publishSync(message:"Test", toChannel: "testThatWeCanSendMessages")
+}
+```
+
 
 ## Structure
 
