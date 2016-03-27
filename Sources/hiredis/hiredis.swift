@@ -179,6 +179,34 @@ public func redisCommand(context context: redisContext, command: String, args: C
   }
 }
 
+public func redisSubscribe(context context: redisContext, toChannel channel: String, handleWith handler: (message: redisReply?) -> (), args: CVarArg ...) {
+  withVaList(args) { args in
+
+    let subscribeReply = UnsafeMutablePointer<CHiRedis.redisReply>(redisvCommand(context.cContext, "SUBSCRIBE \(channel)", args))
+    freeReplyObject(subscribeReply)
+
+    var reply : UnsafeMutablePointer<Void> = nil
+
+    while redisGetReply(context.cContext, &reply) == 0 /*REDIS_OK*/ {
+        //handler(message: reply)
+        print(reply)
+        handler(message: nil)
+        freeReplyObject(reply)
+    }
+
+  }
+}
+
+
+public func redisUnsubscribe(context context: redisContext, fromChannel channel: String, args: CVarArg ...) {
+  withVaList(args) { args in
+
+    let subscribeReply = UnsafeMutablePointer<CHiRedis.redisReply>(redisvCommand(context.cContext, "UNSUBSCRIBE \(channel)", args))
+    freeReplyObject(subscribeReply)
+
+  }
+}
+
 
 public func redisCommandWithArguments(context context: redisContext, command: String, args: CVaListPointer) -> redisReply? {
   return redisReply(cReply: UnsafeMutablePointer<CHiRedis.redisReply>(redisvCommand(context.cContext, command, args)))

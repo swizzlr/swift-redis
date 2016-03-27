@@ -1,18 +1,20 @@
-class PubSub {
+import hiredis
+
+public class PubSub {
 
 
 	var redis : Redis
 
-	init (redis : Redis) {
+	public init (redis : Redis) {
 		self.redis = redis
-	}	
-
-	func subscribe(channel : String, callback : (message: String) -> ()) {
-		
 	}
 
-	func unsubscribe(channel : String) {
+	public func subscribe(toChannel channel : String, handleWith callback : (message: redisReply?) -> ()) {
+		redisSubscribe(context: redis.context, toChannel: channel, handleWith: callback)
+	}
 
+	public func unsubscribe(channel : String) {
+		redisUnsubscribe(context: redis.context, fromChannel: channel)
 	}
 
 }
